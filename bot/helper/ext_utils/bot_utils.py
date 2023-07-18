@@ -183,7 +183,7 @@ def get_readable_message():
     buttons = ButtonMaker()
     buttons.ubutton(f"Repo", f"https://github.com/SN-Abdullah-Al-Noman/Atrocious_Mirror")
     buttons.ibutton("Refresh", "status ref")
-    buttons.ubutton(f"Group", f"https://t.me/+yw0A-x4cYBphZmJl")
+    buttons.ubutton(f"Group", f"https://t.me/lightningroup2")
     button = buttons.build_menu(3)
     if tasks > STATUS_LIMIT:
         buttons = ButtonMaker()
