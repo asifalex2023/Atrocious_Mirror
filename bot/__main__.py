@@ -25,7 +25,7 @@ from .modules import authorize, broadcast, bot_settings, cancel_mirror, clone, e
 
 async def stats(client, message):
     if await aiopath.exists('.git'):
-        last_commit = await cmd_exec("git log -1 --date=short --pretty=format:'%cd <b>From</b> %cr'", True)
+        last_commit = await cmd_exec("git log -1 --date=short --pretty=format:'%cd <b>\nFrom:</b> %cr'", True)
         last_commit = last_commit[0]
     else:
         last_commit = 'No UPSTREAM_REPO'
@@ -37,12 +37,12 @@ async def stats(client, message):
             f'<b>OS Uptime:</b> {get_readable_time(time() - boot_time())}\n\n'\
             f'<b>Total Disk Space:</b> {get_readable_file_size(total)}\n'\
             f'<b>Used:</b> {get_readable_file_size(used)} | <b>Free:</b> {get_readable_file_size(free)}\n\n'\
-            f'<b>Upload:</b> {get_readable_file_size(net_io_counters().bytes_sent)}\n'\
-            f'<b>Download:</b> {get_readable_file_size(net_io_counters().bytes_recv)}\n\n'\
-            f'<b>CPU:</b> {cpu_percent(interval=0.5)}%\n'\
-            f'<b>RAM:</b> {memory.percent}%\n'\
-            f'<b>DISK:</b> {disk}%\n\n'\
-            f'<b>Physical Cores:</b> {cpu_count(logical=False)}\n'\
+            f'<b>Up:</b> {get_readable_file_size(net_io_counters().bytes_sent)} <b>|</b> '\
+            f'<b>Down:</b> {get_readable_file_size(net_io_counters().bytes_recv)}\n'\
+            f'<b>CPU:</b> {cpu_percent(interval=0.5)}% <b>|</b> '\
+            f'<b>RAM:</b> {memory.percent}% <b>| </b>'\
+            f'<b>DISK:</b> {disk}%\n'\
+            f'<b>Physical Cores:</b> {cpu_count(logical=False)} <b>|</b> '\
             f'<b>Total Cores:</b> {cpu_count(logical=True)}\n\n'\
             f'<b>SWAP:</b> {get_readable_file_size(swap.total)} | <b>Used:</b> {swap.percent}%\n'\
             f'<b>Memory Total:</b> {get_readable_file_size(memory.total)}\n'\
@@ -71,6 +71,7 @@ async def start(client, message):
         reply_markup = buttons.build_menu(2)
         start_string = f'''This bot can mirror all your links|files|torrents to Google Drive or any rclone cloud or to telegram.\nType /{BotCommands.HelpCommand} to get a list of available commands'''
         await sendMessage(message, start_string, reply_markup)
+    await DbManger().update_pm_users(message.from_user.id)
 
 async def restart(client, message):
     restart_message = await sendMessage(message, "Restarting...")
